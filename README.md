@@ -1,4 +1,9 @@
 # Kaggle-AI-Studies
+
+<h4 align="center"> 
+    :construction:  Project under construction  :construction:
+</h4>
+
 # My Journey with AI
 
 My journey with Artificial Intelligence began as a trainee for the IEEE Computational Intelligence Society (CIS) Student Chapter. There, I built a strong foundation in AI concepts and applications. 
