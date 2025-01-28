@@ -11,5 +11,5 @@ Now, to continue my path of self-improvement while aligning with my specializati
 
 Feel free to explore this repository and also check out my previous projects, such as [this one on wine analysis]([#](https://github.com/ViniciusGN/CIS-2-Trainee)). I hope you find these resources insightful and inspiring!
 
-# Table of Contents
+## Table of Contents
 - Q-Learning Study, promoted by ENSICAEN in class _Artificial Intelligence_;
