@@ -42,6 +42,7 @@ class DFS( Agent ):
 
         """
         open_list = [[ (initial_state, None) ]] # A state is a pair (board, direction)
+        print("DFS: initial state is", open_list)
         closed_list = set([initial_state]) # keep already explored positions
 
         while open_list:
@@ -81,7 +82,7 @@ class BFS( Agent ):
         closed_list = set([initial_state]) # keep already explored positions
 
         while open_list:
-            # Get the path at the top of the stack (pop() returns the last item of the list)
+            # Get the path at the top of the stack (pop(0) returns the first item of the list)
             current_path = open_list.pop(0)
             # Get the last place of that path
             current_state, current_direction = current_path[-1]
@@ -155,7 +156,30 @@ class GBFS( Agent ):
         - state.heuristic(): Returns the heuristic value for the specified state.
         """
 
-        # *** YOUR CODE HERE ***
+        # use a priority queue with the minimum queue.
+        from utils import PriorityQueue
+        open_list = PriorityQueue()
+        open_list.push([(initial_state, None)], initial_state.heuristic()) # a state is a pair (boad, direction)
+        closed_list = set([initial_state]) # keep already explored positions
+
+        while not open_list.isEmpty():
+            # Get the path at the top of the queue
+            current_path, cost = open_list.pop()
+            # Get the last place of that path
+            current_state, current_direction = current_path[-1]
+            # Check if we have reached the goal
+            if current_state.is_goal_state():
+                return (list (map(lambda x : x[1], current_path[1:])))
+            else:
+                # Check were we can go from here
+                next_steps = current_state.get_successor_states()
+                # Add the new paths (one step longer) to the queue
+                for state, direction, weight in next_steps:
+                    # Avoid loop!
+                    if state not in closed_list:
+                        closed_list.add(state)
+                        open_list.push((current_path + [ (state, direction) ]), current_state.heuristic())
+        return []
         # Base your work in the above UCS implementation
 
  #  ______                               _                  ____  
@@ -179,7 +203,29 @@ class ASS( Agent ):
 
         """
         
-        # *** YOUR CODE HERE ***
+        from utils import PriorityQueue
+        open_list = PriorityQueue()
+        open_list.push([(initial_state, None)], initial_state.heuristic()) # a state is a pair (boad, direction)
+        closed_list = set([initial_state]) # keep already explored positions
+
+        while not open_list.isEmpty():
+            # Get the path at the top of the queue
+            current_path, cost = open_list.pop()
+            # Get the last place of that path
+            current_state, current_direction = current_path[-1]
+            # Check if we have reached the goal
+            if current_state.is_goal_state():
+                return (list (map(lambda x : x[1], current_path[1:])))
+            else:
+                # Check were we can go from here
+                next_steps = current_state.get_successor_states()
+                # Add the new paths (one step longer) to the queue
+                for state, direction, weight in next_steps:
+                    # Avoid loop!
+                    if state not in closed_list:
+                        closed_list.add(state)
+                        open_list.push((current_path + [ (state, direction) ]), current_state.heuristic())
+        return []
 
  #  ______                               _                  _  _   
  # |  ____|                             (_)                | || |  
