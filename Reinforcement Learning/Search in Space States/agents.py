@@ -159,7 +159,7 @@ class GBFS( Agent ):
         # use a priority queue with the minimum queue.
         from utils import PriorityQueue
         open_list = PriorityQueue()
-        open_list.push([(initial_state, None)], initial_state.heuristic()) # a state is a pair (boad, direction)
+        open_list.push([(initial_state, None)], 0) # a state is a pair (boad, direction)
         closed_list = set([initial_state]) # keep already explored positions
 
         while not open_list.isEmpty():
@@ -178,7 +178,7 @@ class GBFS( Agent ):
                     # Avoid loop!
                     if state not in closed_list:
                         closed_list.add(state)
-                        open_list.push((current_path + [ (state, direction) ]), current_state.heuristic())
+                        open_list.push((current_path + [ (state, direction) ]), state.heuristic())
         return []
         # Base your work in the above UCS implementation
 
@@ -224,7 +224,7 @@ class ASS( Agent ):
                     # Avoid loop!
                     if state not in closed_list:
                         closed_list.add(state)
-                        open_list.push((current_path + [ (state, direction) ]), current_state.heuristic())
+                        open_list.push((current_path + [ (state, direction) ]), state.heuristic() + cost + weight) # only consider the heuristic (immediate gain)
         return []
 
  #  ______                               _                  _  _   
