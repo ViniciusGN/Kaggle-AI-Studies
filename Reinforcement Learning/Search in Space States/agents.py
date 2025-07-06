@@ -248,7 +248,38 @@ class IDS( Agent ):
         - state.heuristic(): Returns the heuristic value for the specified state.
         """
 
-        # *** YOUR CODE HERE ***
+        open_list = [[ (initial_state, None) ]] # A state is a pair (board, direction)
+        closed_list = set([initial_state]) # keep already explored positions
+        limit = self.MAX_PATH_LENGTH
+        current_length = 1
+        
+        while open_list:
+            # Get the path at the top of the stack (pop() returns the last item of the list)
+            current_path = open_list.pop()
+            # Get the last place of that path
+            current_state, current_direction = current_path[-1]
+            # Check if we have reached the goal
+            if current_state.is_goal_state():
+                # remove the start point and return only the directions.
+                return (list (map(lambda x : x[1], current_path[1:])))
+            else:
+                # Check where we can go from here
+                next_steps = current_state.get_successor_states()
+                # Add the new paths (one step longer) to the stack
+                for state, direction, weight in next_steps:
+                    # do not add already explored states
+                    if len(current_path) < limit and state not in closed_list:
+                        # add at the end of the list
+                        closed_list.add(state)
+                        # only add if the path is not too long
+                        if len(current_path) < current_length:
+                            open_list.append( (current_path + [ (state, direction) ]) )
+            # If we have exhausted the current length, increase it
+            if not open_list and current_length < limit:
+                current_length += 1
+                closed_list.clear()  # Clear the closed list for the next iteration
+                open_list = [[ (initial_state, None) ]]  # Reset the open list with the initial state
+        return []
 
  #  ______                               _                  _____ 
  # |  ____|                             (_)                | ____|
