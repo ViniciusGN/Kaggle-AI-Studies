@@ -268,14 +268,14 @@ class IDS( Agent ):
                 # Add the new paths (one step longer) to the stack
                 for state, direction, weight in next_steps:
                     # do not add already explored states
-                    if len(current_path) < limit and state not in closed_list:
+                    if len(current_path) < self.MAX_PATH_LENGTH and state not in closed_list:
                         # add at the end of the list
                         closed_list.add(state)
                         # only add if the path is not too long
                         if len(current_path) < current_length:
                             open_list.append( (current_path + [ (state, direction) ]) )
             # If we have exhausted the current length, increase it
-            if not open_list and current_length < limit:
+            if not open_list and current_length < self.MAX_PATH_LENGTH:
                 current_length += 1
                 closed_list.clear()  # Clear the closed list for the next iteration
                 open_list = [[ (initial_state, None) ]]  # Reset the open list with the initial state
