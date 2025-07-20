@@ -41,7 +41,7 @@ class Agent:
         """ This is the method to implement for each specific solver."""
         raise Exception("Invalid CSPSolver class, Solve() not implemented")
 
-def pause( text):
+def pause(text):
     if sys.version_info.major >= 3:
         input(text)
     else:
@@ -167,39 +167,38 @@ class FC( Agent ):
         self.select_unassigned_variable = heuristic_function
         domains = grid.get_domain_values()
         return self.__recursive_backtracking(grid, domains, {})
-
-    def __recursive_backtracking( self, grid, domains, assignment ):
-        """ This private method is externalized to implement a recursive search.
-        @return a complete assigment or None. """
-
-        if len(domains) == 0: # All cells set
+    
+    def __recursive_backtracking(self, grid, domains, assignment):
+        if len(domains) == 0:
             return assignment
 
         self.increment_count()
-        #  var = SELECT-UNASSIGNED-VARIABLE(Variables[csp], assignment, csp)
         variable = self.select_unassigned_variable(domains, assignment)
-        #  foreach value in ORDER-DOMAIN-VALUES(var, assignment, csp) do
         values = self.__order_domain_values(variable, domains, assignment)
         del domains[variable]
+        
         for value in values:
-            # print("Try cell", variable, "with value:", value, "from", values)
-            # pause("Next")
-            
-            #    add {var = value } to assignment
             assignment[variable] = value
-            #  if value is consistent with assignment given Constraints[csp] then
-            if self.__check_consistency(grid, assignment, variable, value):
-                #    result = RECURSIVE-BACKTRACKING(assignment, csp)
-                #    Use a deep copy of domains to avoid backtracking issues.
-                result = self.__recursive_backtracking(grid, copy.deepcopy(domains), assignment)
-                #    if result != failure then return result
+
+            new_domains = self.__forward_check(domains, assignment, grid, variable, value)
+            if new_domains is not None:
+                result = self.__recursive_backtracking(grid, new_domains, assignment)
                 if result is not None:
                     return assignment
-            #    remove {var = value} from assignment
+
             del assignment[variable]
 
         return None
-
+    
+    def __forward_check(self, domains, assignment, grid, variable, value):
+        new_domains = copy.deepcopy(domains)
+        for neighbor in grid.get_related_cells(variable):
+            if neighbor not in assignment and value in new_domains[neighbor]:
+                new_domains[neighbor].remove(value)
+                if not new_domains[neighbor]:
+                    return None
+        return new_domains
+    
     def  __order_domain_values( self, variable, domains, assignment ):
         """ 
         Sorts the values by priority using the current heuristic.
@@ -243,7 +242,16 @@ def my_heuristic( domains, assignment ):
     @param assigment a partial assignment as a dictionary: variable=value.
     @return variable"""
 
-    "*** YOUR CODE HERE ***"
+    # Sort the variables by the size of their domain (ascending order)
+    sorted_vars = sorted(domains.items(), key=lambda item: len(item[1]))
+    
+    # Return the first variable with the smallest domain
+    for variable, values in sorted_vars:
+        if variable not in assignment:
+            return variable
+    
+    # If all variables are assigned, return None
+    return None
 
 #  ______                   _            ____  
 # |  ____|                 (_)          |___ \ 
