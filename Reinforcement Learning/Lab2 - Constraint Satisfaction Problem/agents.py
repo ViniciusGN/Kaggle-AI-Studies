@@ -274,11 +274,24 @@ class AC3( Agent ):
         domains = grid.get_domain_values()
         # Prune the domain of each variable
         return self.__AC3(grid, domains)
+    
+    def is_goal( self, grid, assignment ):
+        """ Tests if the assignment is a solution.
+        ie. no duplicates in each boxe, line and column.
+        
+        @param assignment a dictionary with the current assignment.
+        @return True if the assignment is complete and consistent.
+        """
+        for variable, value in assignment.iteritems():
+            for cell in grid.get_related_cells(variable):
+                if assignment[variable] == assignment[cell]:
+                    return False
+        return True
 
     def __AC3( self, grid, domains ):
         """ Prunes the domain of variables. """
 
-        "*** YOUR CODE HERE ***"
+        
 
 #  ______                   _            _  _   
 # |  ____|                 (_)          | || |  
