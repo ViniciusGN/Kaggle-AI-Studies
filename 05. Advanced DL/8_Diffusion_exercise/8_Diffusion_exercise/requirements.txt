@@ -1,0 +1,14 @@
+numpy<2
+
+jupyter
+ipykernel
+
+scikit-learn # only for notebook 6B about GMM
+
+torch
+
+matplotlib
+
+tqdm
+
+threadpoolctl # only to fix a problem with scikit-learn and torch on some systems
